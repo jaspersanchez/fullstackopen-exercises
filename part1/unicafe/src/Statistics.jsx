@@ -1,14 +1,14 @@
-import Feedback from "./Feedback"
+import StatisticLine from "./StatisticLine"
 
 const Statistics = ({ avg, positive, good, bad, neutral }) => {
     if (!isNaN(avg)) {
         return (
             <>
-                <Feedback title="good" feedback={good} />
-                <Feedback title="neutral" feedback={neutral} />
-                <Feedback title="bad" feedback={bad} />
-                <Feedback title="avg" feedback={avg} />
-                <Feedback title="positive" feedback={positive} />
+                <StatisticLine title="good" value={good} />
+                <StatisticLine title="neutral" value={neutral} />
+                <StatisticLine title="bad" value={bad} />
+                <StatisticLine title="avg" value={avg} />
+                <StatisticLine title="positive" value={positive} />
             </>
         )
     } 

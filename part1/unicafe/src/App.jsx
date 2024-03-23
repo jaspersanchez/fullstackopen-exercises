@@ -17,12 +17,10 @@ const App = () => {
   const positive = ((good * 1) / all) + ' %'
 
   const handleGoodClick = () => setGood(good + 1)
-  
 
   const handleNeutralClick = () => setNeutral(neutral + 1)
 
   const handleBadClick = () => setBad(bad + 1)
-
   
   return (
     <div>
