@@ -3,13 +3,15 @@ import StatisticLine from "./StatisticLine"
 const Statistics = ({ avg, positive, good, bad, neutral }) => {
     if (!isNaN(avg)) {
         return (
-            <>
-                <StatisticLine title="good" value={good} />
-                <StatisticLine title="neutral" value={neutral} />
-                <StatisticLine title="bad" value={bad} />
-                <StatisticLine title="avg" value={avg} />
-                <StatisticLine title="positive" value={positive} />
-            </>
+            <table>
+                <tbody>
+                    <StatisticLine title="good" value={good} />
+                    <StatisticLine title="neutral" value={neutral} />
+                    <StatisticLine title="bad" value={bad} />
+                    <StatisticLine title="avg" value={avg} />
+                    <StatisticLine title="positive" value={positive} />
+                </tbody>       
+            </table>
         )
     } 
     
