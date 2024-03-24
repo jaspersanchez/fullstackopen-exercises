@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Button from './Button'
 import Anecdote from './Anecdote'
+import Header from './Header'
 
 const App = () => {
   const anecdotes = [
@@ -21,19 +22,25 @@ const App = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
 
   const handleVote = () => {
-    const copy = new Uint32Array(Array.from(votes))
+    const copy = new Uint32Array(votes)
     copy[selected] += 1
     setVotes(copy)
   }
 
+  // Calculate the highest vote and its index
+  const highestVoteIndex = votes.indexOf(Math.max(...votes))
+
   return (
     <>
-      <Anecdote
-        anecdote={anecdotes[selected]}
-        votes={votes[selected]}
-        onClick={handleVote}
-      />
+      <Header title="Anecdote of the day" />
+      <Anecdote anecdote={anecdotes[selected]} votes={votes[selected]} />
+      <Button onClick={handleVote} title="vote" />
       <Button onClick={handleNextAnecdote} title="next anecdote" />
+      <Header title="Anecdote with most votes" />
+      <Anecdote
+        anecdote={anecdotes[highestVoteIndex]}
+        votes={votes[highestVoteIndex]}
+      />
     </>
   )
 }

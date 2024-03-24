@@ -1,11 +1,8 @@
-import Button from './Button'
-
-const Anecdote = ({ anecdote, votes, onClick }) => {
+const Anecdote = ({ anecdote, votes }) => {
   return (
     <>
       <div>{anecdote}</div>
       <div>has {votes} votes</div>
-      <Button onClick={onClick} title="vote" />
     </>
   )
 }
