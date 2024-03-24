@@ -1,13 +1,14 @@
-import Part from "./Part"
+import Part from './Part'
 
-const Content = ({ course }) => {
-    return (
-        <>
-            <Part part={course.parts[0]} />
-            <Part part={course.parts[1]} />
-            <Part part={course.parts[2]} />
-        </>
-    )
+const Content = ({ parts }) => {
+  const [part1, part2, part3] = parts
+  return (
+    <>
+      <Part part={part1} />
+      <Part part={part2} />
+      <Part part={part3} />
+    </>
+  )
 }
 
 export default Content
