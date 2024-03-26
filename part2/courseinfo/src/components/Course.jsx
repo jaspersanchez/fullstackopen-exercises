@@ -4,18 +4,14 @@ import Total from './Total'
 
 const Course = ({ course }) => {
   const { name, parts } = course
+
+  const total = parts.reduce((s, p) => (s += p.exercises), 0)
+
   return (
     <div>
       <Header course={name} />
       <Content parts={parts} />
-      <Total
-        sum={
-          parts[0].exercises +
-          parts[1].exercises +
-          parts[2].exercises +
-          parts[3].exercises
-        }
-      />
+      <Total sum={total} />
     </div>
   )
 }
