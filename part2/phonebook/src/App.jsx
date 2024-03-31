@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import personService from './services/persons'
 
-const Notification = ({ message }) => {
-  if (message === null) {
+const Notification = ({ successMessage, errorMessage }) => {
+  if ((successMessage || errorMessage) === null) {
     return null
   }
+  const notifStyle = (successMessage && 'success') || (errorMessage && 'error')
 
-  return <div className="success">{message}</div>
+  return <div className={notifStyle}>{successMessage || errorMessage}</div>
 }
 
 const Filter = ({ value, onChange }) => {
@@ -68,6 +69,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filteredName, setFilteredName] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -88,14 +90,25 @@ const App = () => {
         ...personExists,
         number: newNumber,
       }
-      personService.update(newObject.id, newObject).then((returnedPerson) => {
-        setPersons(
-          persons.map((person) =>
-            person.id !== returnedPerson.id ? person : returnedPerson
+      personService
+        .update(newObject.id, newObject)
+        .then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== returnedPerson.id ? person : returnedPerson
+            )
           )
-        )
-      })
+        })
+        .catch((error) => {
+          setErrorMessage(
+            `Information of ${personExists.name} has already been removed from server`
+          )
+          setTimeout(() => setErrorMessage(null), 5000)
+          setPersons(persons.filter((person) => person.id !== personExists.id))
+        })
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleAddName = (event) => {
@@ -105,8 +118,7 @@ const App = () => {
 
     if (personExists) {
       handleUpdateName(personExists)
-      setNewName('')
-      setNewNumber('')
+
       return
     }
 
@@ -136,7 +148,10 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={successMessage} />
+      <Notification
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
 
       <Filter
         value={filteredName}

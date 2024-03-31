@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "09094242",
-      "id": "1"
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
@@ -21,14 +16,9 @@
       "id": "4"
     },
     {
-      "id": "642c",
-      "name": "Jasper Sanchez",
-      "number": "09693459996"
-    },
-    {
-      "id": "4dc4",
+      "id": "d426",
       "name": "Rob C Dee",
-      "number": "012312388"
+      "number": "42"
     }
   ]
 }
