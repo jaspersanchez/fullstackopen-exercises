@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return <div className="success">{message}</div>
+}
+
 const Filter = ({ value, onChange }) => {
   return (
     <div>
@@ -59,6 +67,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filteredName, setFilteredName] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -108,6 +117,8 @@ const App = () => {
 
     personService.create(newPerson).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson))
+      setSuccessMessage(`Added ${returnedPerson.name}`)
+      setTimeout(() => setSuccessMessage(null), 5000)
       setNewName('')
       setNewNumber('')
     })
@@ -124,6 +135,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={successMessage} />
 
       <Filter
         value={filteredName}
