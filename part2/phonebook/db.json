@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "09094242",
       "id": "1"
     },
     {
@@ -12,23 +12,13 @@
     },
     {
       "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "number": "092294827",
       "id": "3"
     },
     {
       "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
+      "number": "42",
       "id": "4"
-    },
-    {
-      "id": "c323",
-      "name": "Jasper Sanchez",
-      "number": "0410-42-0129487"
-    },
-    {
-      "id": "b06f",
-      "name": "Rob C Dee",
-      "number": "09-98-234757"
     }
   ]
 }
