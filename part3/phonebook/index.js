@@ -24,8 +24,22 @@ const persons = [
   },
 ]
 
+const date = new Date()
+
+const getInfoPageHtml = (personCount, date) => {
+  return `
+    <p>Phonebook has info for ${personCount} people </p>
+    <p>${date}</p>
+`
+}
+
 app.get('/api/persons', (req, res) => {
   return res.json(persons)
+})
+
+app.get('/info', (req, res) => {
+  const page = getInfoPageHtml(persons.length, date)
+  return res.send(page)
 })
 
 const PORT = 3001
