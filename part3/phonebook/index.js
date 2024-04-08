@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
   {
     id: 1,
@@ -33,13 +35,15 @@ const getInfoPageHtml = (personCount, date) => {
 `
 }
 
+const generateId = () => Math.floor(Math.random() * 1000000000000)
+
 app.get('/api/persons', (req, res) => {
-  return res.json(persons)
+  res.json(persons)
 })
 
 app.get('/info', (req, res) => {
   const page = getInfoPageHtml(persons.length, date)
-  return res.send(page)
+  res.send(page)
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -54,7 +58,22 @@ app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   persons = persons.filter((p) => p.id !== id)
 
-  return res.status(204).end()
+  res.status(204).end()
+})
+
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body
+  const id = generateId()
+
+  const person = {
+    id,
+    name,
+    number,
+  }
+
+  persons = persons.concat(person)
+
+  return res.json(person)
 })
 
 const PORT = 3001
