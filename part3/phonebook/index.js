@@ -1,6 +1,8 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+app.use(morgan('tiny'))
 app.use(express.json())
 
 let persons = [
@@ -74,7 +76,7 @@ app.post('/api/persons', (req, res) => {
 
   if (personExist)
     return res.status(400).json({
-      error: 'name already exists in the phonebook',
+      error: 'name must be unique',
     })
 
   const person = {
