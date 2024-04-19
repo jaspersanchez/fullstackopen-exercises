@@ -37,6 +37,23 @@ test('list returns correct length in JSON', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
+test.only('unique identifier must be named id', async () => {
+  await Blog.deleteMany({})
+
+  for (let blog of initialBlogs) {
+    const blogObject = new Blog(blog)
+    await blogObject.save()
+  }
+
+  const response = await api.get('/api/blogs')
+
+  const keys = response.body.map((blog) =>
+    Object.keys(blog).find((key) => key === 'id'),
+  )
+
+  assert(keys.every((key) => key === 'key'))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
