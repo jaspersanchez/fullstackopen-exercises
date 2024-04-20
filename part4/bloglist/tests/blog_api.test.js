@@ -58,7 +58,7 @@ test('a valid blog can be added', async () => {
   assert(titles.includes(newBlog.title))
 })
 
-test.only('likes must be default to 0', async () => {
+test('likes must be default to 0', async () => {
   const newBlog = {
     title: 'Rookie',
     author: 'Deco27',
@@ -72,6 +72,18 @@ test.only('likes must be default to 0', async () => {
     .expect('Content-Type', /application\/json/)
 
   assert.strictEqual(resultBlog.body.likes, 0)
+})
+
+test('blog without title and url is not added', async () => {
+  const newBlog = {
+    author: 'Deco27',
+    likes: 100,
+  }
+
+  await api.post('/api/blogs').send(newBlog).expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
 after(async () => {
