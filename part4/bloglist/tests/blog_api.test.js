@@ -38,7 +38,7 @@ test('unique identifier must be named id', async () => {
   assert(keys.every((key) => key === 'id'))
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Rookie',
     author: 'Deco27',
@@ -56,6 +56,22 @@ test.only('a valid blog can be added', async () => {
 
   const titles = blogsAtEnd.map((blog) => blog.title)
   assert(titles.includes(newBlog.title))
+})
+
+test.only('likes must be default to 0', async () => {
+  const newBlog = {
+    title: 'Rookie',
+    author: 'Deco27',
+    url: 'https://miku.com',
+  }
+
+  const resultBlog = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(resultBlog.body.likes, 0)
 })
 
 after(async () => {
