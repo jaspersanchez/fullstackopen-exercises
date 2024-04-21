@@ -33,7 +33,6 @@ test('unique identifier must be named id', async () => {
   const keys = response.body.map((blog) =>
     Object.keys(blog).find((key) => key === 'id'),
   )
-  console.log(keys)
 
   assert(keys.every((key) => key === 'id'))
 })
@@ -84,6 +83,33 @@ test('blog without title and url is not added', async () => {
 
   const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+test('delete succeeds with status code 204 if id is valid', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+  const title = blogsAtEnd.map((blog) => blog.title)
+  assert(!title.includes(blogToDelete.title))
+})
+
+test('update succeeds with a valid id', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = {
+    ...blogsAtStart[0],
+    likes: 23,
+  }
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate).expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const likes = blogsAtEnd.map((blog) => blog.likes)
+  assert(likes.includes(23))
 })
 
 after(async () => {
