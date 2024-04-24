@@ -3,6 +3,24 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const Notification = ({ info }) => {
+  if (!info.message) {
+    return
+  }
+
+  const style = {
+    color: info.type === 'error' ? 'red' : 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  }
+
+  return <div style={style}>{info.message}</div>
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -11,6 +29,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
+  const [info, setInfo] = useState({ message: null })
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -24,6 +43,17 @@ const App = () => {
       setUser(user)
     }
   }, [])
+
+  const notifyWith = (message, type = 'info') => {
+    setInfo({
+      message,
+      type,
+    })
+
+    setTimeout(() => {
+      setInfo({ message: null })
+    }, 3000)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -41,7 +71,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log(exception.response.data.error)
+      notifyWith(exception.response.data.error, 'error')
     }
   }
 
@@ -66,8 +96,9 @@ const App = () => {
       setAuthor('')
       setUrl('')
       setBlogs(blogs.concat(blog))
+      notifyWith(`a new blog ${title} by ${author} added`)
     } catch (exception) {
-      console.log(exception.response.data.error)
+      notifyWith(exception.response.data.error, 'error')
     }
   }
 
@@ -75,6 +106,7 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
+        <Notification info={info} />
         <form onSubmit={handleLogin} method="post">
           <div>
             username
@@ -103,6 +135,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification info={info} />
       {user && (
         <p>
           {user.name} <button onClick={handleLogout}>logout</button>
