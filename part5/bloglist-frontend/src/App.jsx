@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const Notification = ({ info }) => {
   if (!info.message) {
@@ -44,6 +46,8 @@ const App = () => {
     }
   }, [])
 
+  const blogFormRef = useRef()
+
   const notifyWith = (message, type = 'info') => {
     setInfo({
       message,
@@ -80,23 +84,12 @@ const App = () => {
     setUser(null)
   }
 
-  const handleAddBlog = async (event) => {
-    event.preventDefault()
-
-    const newObject = {
-      title,
-      author,
-      url,
-    }
-
+  const handleAddBlog = async (newObject) => {
+    blogFormRef.current.toggleVisibility()
     try {
       const blog = await blogService.create(newObject)
 
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       setBlogs(blogs.concat(blog))
-      notifyWith(`a new blog ${title} by ${author} added`)
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
     }
@@ -141,37 +134,9 @@ const App = () => {
           {user.name} <button onClick={handleLogout}>logout</button>
         </p>
       )}
-      <h2>create new</h2>
-      <form onSubmit={handleAddBlog}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm addBlog={handleAddBlog} notifyWith={notifyWith} />
+      </Togglable>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
@@ -180,4 +145,3 @@ const App = () => {
 }
 
 export default App
-
