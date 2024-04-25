@@ -27,9 +27,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
   const [info, setInfo] = useState({ message: null })
 
@@ -95,6 +92,16 @@ const App = () => {
     }
   }
 
+  const handleAddLike = async (id, newObject) => {
+    try {
+      const returnedBlog = await blogService.update(id, newObject)
+
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+    } catch (exception) {
+      notifyWith(exception.response.data.error, 'error')
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -138,7 +145,7 @@ const App = () => {
         <BlogForm addBlog={handleAddBlog} notifyWith={notifyWith} />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} addLike={handleAddLike} />
       ))}
     </div>
   )
