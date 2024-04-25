@@ -31,7 +31,9 @@ const App = () => {
   const [info, setInfo] = useState({ message: null })
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => a.likes - b.likes)))
   }, [])
 
   useEffect(() => {
@@ -96,7 +98,11 @@ const App = () => {
     try {
       const returnedBlog = await blogService.update(id, newObject)
 
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+      setBlogs(
+        blogs
+          .map((blog) => (blog.id !== id ? blog : returnedBlog))
+          .sort((a, b) => a.likes - b.likes),
+      )
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
     }
