@@ -88,6 +88,7 @@ const App = () => {
     try {
       const blog = await blogService.create(newObject)
 
+      console.log(blog)
       setBlogs(blogs.concat(blog))
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
@@ -103,6 +104,16 @@ const App = () => {
           .map((blog) => (blog.id !== id ? blog : returnedBlog))
           .sort((a, b) => a.likes - b.likes),
       )
+    } catch (exception) {
+      notifyWith(exception.response.data.error, 'error')
+    }
+  }
+
+  const handleDeleteBlog = async (id) => {
+    try {
+      await blogService.destroy(id)
+
+      setBlogs(blogs.filter((blog) => blog.id !== id))
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
     }
@@ -151,7 +162,13 @@ const App = () => {
         <BlogForm addBlog={handleAddBlog} notifyWith={notifyWith} />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} addLike={handleAddLike} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          username={user.username}
+          addLike={handleAddLike}
+          deleteBlog={handleDeleteBlog}
+        />
       ))}
     </div>
   )
