@@ -4,24 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-
-const Notification = ({ info }) => {
-  if (!info.message) {
-    return
-  }
-
-  const style = {
-    color: info.type === 'error' ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  }
-
-  return <div style={style}>{info.message}</div>
-}
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
