@@ -4,6 +4,7 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let container
+  let addLike
 
   beforeEach(() => {
     const blog = {
@@ -19,7 +20,9 @@ describe('<Blog />', () => {
       },
     }
 
-    container = render(<Blog blog={blog} />).container
+    addLike = vi.fn()
+
+    container = render(<Blog blog={blog} addLike={addLike} />).container
   })
 
   test('renders title and author', async () => {
@@ -38,5 +41,16 @@ describe('<Blog />', () => {
 
     const div = container.querySelector('.blogDetails')
     expect(div).not.toHaveStyle('display: none')
+  })
+
+  test('after like button clicked twice the props is called twice', async () => {
+    const user = userEvent.setup()
+
+    const button = screen.getByText('like')
+
+    await user.click(button)
+    await user.click(button)
+
+    expect(addLike.mock.calls).toHaveLength(2)
   })
 })
