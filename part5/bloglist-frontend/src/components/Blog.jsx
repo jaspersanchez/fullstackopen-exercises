@@ -40,7 +40,7 @@ const Blog = ({ blog, addLike, username, deleteBlog }) => {
         {blog.title} {blog.author}{' '}
         <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="blogDetails">
         <div>{blog.url}</div>
         <div>
           likes {blog.likes} <button onClick={handleAddLike}>like</button>
@@ -73,4 +73,3 @@ Blog.propTypes = {
 }
 
 export default Blog
-
