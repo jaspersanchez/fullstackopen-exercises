@@ -101,6 +101,15 @@ describe('Blog app', () => {
           'rgb(255, 0, 0)',
         )
       })
+
+      test('the user added the blog see remove btn', async ({ page }) => {
+        await expect(page.getByText('Jasper Sanchez')).toBeVisible()
+
+        await page.getByRole('button', { name: 'view' }).click()
+        await expect(
+          page.getByText('Jasper Sanchez', { exact: true }),
+        ).toBeVisible()
+      })
     })
   })
 })
