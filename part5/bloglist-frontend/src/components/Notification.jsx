@@ -15,14 +15,22 @@ const Notification = ({ info }) => {
     marginBottom: 10,
   }
 
-  return <div style={style}>{info.message}</div>
+  return (
+    <div data-testid="error" style={style}>
+      {info.message}
+    </div>
+  )
 }
 
 Notification.propTypes = {
   info: PropTypes.shape({
-    message: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    message: PropTypes.string,
+    type: PropTypes.string,
   }),
+}
+
+Notification.defaultProps = {
+  message: null,
 }
 
 export default Notification
