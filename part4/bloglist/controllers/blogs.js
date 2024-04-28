@@ -49,6 +49,8 @@ blogRouter.put('/:id', async (request, response) => {
   if (!request.user)
     return response.status(401).json({ error: 'token invalid' })
 
+  console.log('happened')
+
   const body = request.body
 
   const blog = {

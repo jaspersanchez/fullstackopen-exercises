@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 const { loginWith, createBlog, assertNotif } = require('./helper')
+const { resolve } = require('path')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -109,6 +110,70 @@ describe('Blog app', () => {
         await expect(
           page.getByText('Jasper Sanchez', { exact: true }),
         ).toBeVisible()
+      })
+    })
+
+    describe('a few blogs exists', () => {
+      beforeEach(async ({ page }) => {
+        const blogs = [
+          {
+            title: 'CSS is hard',
+            author: 'Mark Mijares',
+            url: 'https://digital-marks.com',
+          },
+          {
+            title: 'HTML is easy',
+            author: 'Jimmy Mangente',
+            url: 'https://kalbong-kwa.com',
+          },
+          {
+            title: 'Rust is Chad',
+            author: 'Jasper Sanchez',
+            url: 'https://tokyo-osaka.com',
+          },
+        ]
+
+        for (const blog of blogs) {
+          await createBlog(page, blog.title, blog.author, blog.url)
+          await new Promise((resolve) => setTimeout(resolve, 500))
+        }
+      })
+
+      test('blogs are arranged in order', async ({ page }) => {
+        const elements = await page.getByRole('button', { name: 'view' }).all()
+        await elements[1].click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.getByText('likes 2')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        await elements[1].click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        await page.getByRole('button', { name: 'like' }).click()
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.getByText('likes 3')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        await elements[2].click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.getByText('likes 1')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        // Check every element in order by likes 3, 2, 1
+        await elements[0].click()
+        await expect(page.getByText('likes 3')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        await elements[1].click()
+        await expect(page.getByText('likes 2')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        await elements[2].click()
+        await expect(page.getByText('likes 1')).toBeVisible()
+        await page.getByRole('button', { name: 'hide' }).click()
       })
     })
   })
