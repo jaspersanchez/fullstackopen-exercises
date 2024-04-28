@@ -67,17 +67,40 @@ describe('Blog app', () => {
       await expect(page.getByRole('button', { name: 'remove' })).toBeVisible()
     })
 
-    test('a blog can be edited', async ({ page }) => {
-      await createBlog(
-        page,
-        'CSS is hard',
-        'Mark Mijares',
-        'https://digital-marks.com',
-      )
+    describe('a new blog is created', () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(
+          page,
+          'CSS is hard',
+          'Mark Mijares',
+          'https://digital-marks.com',
+        )
+      })
 
-      await page.getByRole('button', { name: 'view' }).click()
-      await page.getByRole('button', { name: 'like' }).click()
-      await expect(page.getByText('likes 1')).toBeVisible()
+      test('a blog can be edited', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.getByText('likes 1')).toBeVisible()
+      })
+
+      test('a user added the blog can delete it', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+
+        page.on('dialog', async (dialog) => {
+          await dialog.accept()
+        })
+        await page.getByRole('button', { name: 'remove' }).click()
+
+        await expect(
+          page.getByText('CSS is hard Mark Mijares'),
+        ).not.toBeVisible()
+        await assertNotif(
+          page,
+          expect,
+          'Blog CSS is hard deleted',
+          'rgb(255, 0, 0)',
+        )
+      })
     })
   })
 })

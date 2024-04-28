@@ -71,7 +71,6 @@ const App = () => {
     try {
       const blog = await blogService.create(newObject)
 
-      console.log(blog)
       setBlogs(blogs.concat(blog))
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
@@ -92,11 +91,12 @@ const App = () => {
     }
   }
 
-  const handleDeleteBlog = async (id) => {
+  const handleDeleteBlog = async (id, title) => {
     try {
       await blogService.destroy(id)
 
       setBlogs(blogs.filter((blog) => blog.id !== id))
+      notifyWith(`Blog ${title} deleted`, 'error')
     } catch (exception) {
       notifyWith(exception.response.data.error, 'error')
     }

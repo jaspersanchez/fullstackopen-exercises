@@ -30,7 +30,7 @@ const Blog = ({ blog, addLike, username, deleteBlog }) => {
 
   const handleDeleteBlog = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      deleteBlog(blog.id)
+      deleteBlog(blog.id, blog.title)
     }
   }
 
