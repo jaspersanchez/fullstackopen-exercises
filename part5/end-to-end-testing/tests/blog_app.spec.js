@@ -60,11 +60,24 @@ describe('Blog app', () => {
 
       await page.getByRole('button', { name: 'view' }).click()
       await expect(page.getByText('https://digital-marks.com')).toBeVisible()
-      await expect(page.getByText('Likes 0')).toBeVisible()
+      await expect(page.getByText('likes 0')).toBeVisible()
       await expect(
         page.getByText('Jasper Sanchez', { exact: true }),
       ).toBeVisible()
       await expect(page.getByRole('button', { name: 'remove' })).toBeVisible()
+    })
+
+    test('a blog can be edited', async ({ page }) => {
+      await createBlog(
+        page,
+        'CSS is hard',
+        'Mark Mijares',
+        'https://digital-marks.com',
+      )
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes 1')).toBeVisible()
     })
   })
 })
