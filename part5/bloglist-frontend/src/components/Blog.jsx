@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 const Blog = ({ blog, addLike, username, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
 
+  console.log(blog.user)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -65,8 +67,8 @@ Blog.propTypes = {
       id: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-    }),
-  }),
+    }).isRequired,
+  }).isRequired,
   addLike: PropTypes.func.isRequired,
   deleteBlog: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,

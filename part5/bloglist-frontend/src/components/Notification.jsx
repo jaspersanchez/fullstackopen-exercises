@@ -16,7 +16,7 @@ const Notification = ({ info }) => {
   }
 
   return (
-    <div data-testid="error" style={style}>
+    <div data-testid="notif" style={style}>
       {info.message}
     </div>
   )

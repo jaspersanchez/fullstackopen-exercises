@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog, assertNotif } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -24,14 +24,47 @@ describe('Blog app', () => {
       await loginWith(page, 'djasper', 'test123')
       await expect(page.getByText('Jasper Sanchez')).toBeVisible()
     })
+
     test('fails with wrong credentials', async ({ page }) => {
       await loginWith(page, 'djasper', 'wrong')
-
-      const errorDiv = page.getByTestId('error')
-      await expect(errorDiv).toContainText('invalid username or password')
-      await expect(errorDiv).toHaveCSS('border-style', 'solid')
-      await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+      await assertNotif(
+        page,
+        expect,
+        'invalid username or password',
+        'rgb(255, 0, 0)',
+      )
       await expect(page.getByText('Jasper Sanchez')).not.toBeVisible()
+    })
+  })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, 'djasper', 'test123')
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await createBlog(
+        page,
+        'CSS is hard',
+        'Mark Mijares',
+        'https://digital-marks.com',
+      )
+
+      await assertNotif(
+        page,
+        expect,
+        'a new blog CSS is hard by Mark Mijares added',
+        'rgb(0, 128, 0)',
+      )
+      await expect(page.getByText('CSS is hard Mark Mijares')).toBeVisible()
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('https://digital-marks.com')).toBeVisible()
+      await expect(page.getByText('Likes 0')).toBeVisible()
+      await expect(
+        page.getByText('Jasper Sanchez', { exact: true }),
+      ).toBeVisible()
+      await expect(page.getByRole('button', { name: 'remove' })).toBeVisible()
     })
   })
 })
