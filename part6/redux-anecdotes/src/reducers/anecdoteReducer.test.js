@@ -1,4 +1,4 @@
-import anecdoteReducer, { vote } from './anecdoteReducer'
+import anecdoteReducer, { createAnecdote, vote } from './anecdoteReducer'
 import deepFreeze from 'deep-freeze'
 import { initialState } from './anecdoteReducer'
 
@@ -25,5 +25,21 @@ describe('anecdote reducer', () => {
       ...anecdoteToVote,
       votes: anecdoteToVote.votes + 1,
     })
+  })
+
+  test('a new anecdote is created', () => {
+    // Arrange
+    const anecdote = 'CSS is hard'
+    const action = createAnecdote(anecdote)
+    const state = initialState
+    deepFreeze(state)
+
+    // Act
+    const newState = anecdoteReducer(state, action)
+
+    // Assert
+    expect(
+      newState.find((anecdote) => anecdote.id === action.payload.id),
+    ).toEqual(action.payload)
   })
 })
