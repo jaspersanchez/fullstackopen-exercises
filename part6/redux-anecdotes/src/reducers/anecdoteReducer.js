@@ -41,6 +41,7 @@ const reducer = (state = initialState, action) => {
   }
 }
 
+// action-creator
 export const vote = (id) => {
   return {
     type: 'VOTE',
@@ -49,7 +50,7 @@ export const vote = (id) => {
     },
   }
 }
-
+// action-creator
 export const createAnecdote = (anecdote) => {
   return {
     type: 'CREATE_ANECDOTE',
