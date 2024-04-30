@@ -15,8 +15,10 @@ const Anecdote = ({ anecdote }) => {
   )
 }
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) =>
-    state.sort((a, b) => b.votes - a.votes),
+  const anecdotes = useSelector(({ anecdotes, filter }) =>
+    anecdotes
+      .sort((a, b) => b.votes - a.votes)
+      .filter((anecdote) => anecdote.content.includes(filter)),
   )
 
   return (
