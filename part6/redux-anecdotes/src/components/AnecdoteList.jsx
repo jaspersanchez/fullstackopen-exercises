@@ -16,9 +16,11 @@ const Anecdote = ({ anecdote }) => {
 }
 const AnecdoteList = () => {
   const anecdotes = useSelector(({ anecdotes, filter }) =>
-    anecdotes
+    [...anecdotes]
       .sort((a, b) => b.votes - a.votes)
-      .filter((anecdote) => anecdote.content.includes(filter)),
+      .filter((anecdote) =>
+        anecdote.content.toLowerCase().includes(filter.toLowerCase()),
+      ),
   )
 
   return (
