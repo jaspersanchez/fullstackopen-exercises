@@ -9,14 +9,12 @@ import anecdoteService from '../services/anecdotes'
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const handleSubmitAnecdote = async (e) => {
+  const handleSubmitAnecdote = (e) => {
     e.preventDefault()
     const content = e.target.anecdote.value
     e.target.anecdote.value = ''
-    const newAnecdote = await anecdoteService.create(content)
-
-    dispatch(createAnecdote(newAnecdote))
-    dispatch(showNotification(`Anecdote ${newAnecdote.content} created`))
+    dispatch(createAnecdote(content))
+    dispatch(showNotification(`Anecdote ${content} created`))
     setTimeout(() => dispatch(hideNotification()), 5000)
   }
 
