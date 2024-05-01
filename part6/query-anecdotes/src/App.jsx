@@ -4,6 +4,8 @@ import { getAnecdotes } from './services/anecdotes'
 import { useQuery } from '@tanstack/react-query'
 
 const App = () => {
+  const handleVote = () => {}
+
   const result = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAnecdotes,
@@ -11,10 +13,6 @@ const App = () => {
     retry: 1,
   })
   console.log(JSON.parse(JSON.stringify(result)))
-
-  const handleVote = (anecdote) => {
-    console.log('voted', anecdote.content)
-  }
 
   if (result.isLoading) {
     return <div>loading data...</div>
