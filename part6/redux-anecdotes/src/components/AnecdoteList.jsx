@@ -8,7 +8,7 @@ import {
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
 
-  const handleVote = () => {
+  const handleVote = async () => {
     dispatch(vote(anecdote.id))
     dispatch(showNotification(`you voted ${anecdote.content}`))
     setTimeout(() => dispatch(hideNotification()), 5000)
