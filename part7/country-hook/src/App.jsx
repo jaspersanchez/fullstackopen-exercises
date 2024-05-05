@@ -43,7 +43,7 @@ const useCountry = (name) => {
           setCountry({ found: false })
         })
     }
-  }, [name])
+  }, [])
 
   return country
 }
@@ -94,4 +94,3 @@ const App = () => {
 }
 
 export default App
-
