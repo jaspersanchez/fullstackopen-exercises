@@ -105,10 +105,15 @@ const typeDefs = `
     id: String!
     genres: [String!]!
   }
+  type Authors {
+    name: String!
+    bookCount: Int
+  }
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks: [Books!]!
+    allAuthors: [Authors!]!
   }
 `
 
@@ -117,6 +122,19 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
+    allAuthors: () => {
+      const bookCounts = {}
+      books.forEach((book) => {
+        bookCounts[book.author] = (bookCounts[book.author] || 0) + 1
+      })
+
+      return authors.map((author) => {
+        const { name } = author
+        const bookCount = bookCounts[name] || 0
+
+        return { name, bookCount }
+      })
+    },
   },
 }
 
