@@ -110,7 +110,7 @@ const typeDefs = `
     name: String!
     id: String!
     born: Int
-    bookCount: Int
+    bookCount: Int!
   }
   type Query {
     bookCount: Int!
@@ -146,15 +146,15 @@ const resolvers = {
       return books.filter((book) => book.genres.includes(args.genre))
     },
     allAuthors: () => {
-      const bookCounts = {}
-      books.forEach((book) => {
-        bookCounts[book.author] = (bookCounts[book.author] || 0) + 1
-      })
-
-      return authors.map((author) => {
-        const bookCount = bookCounts[author.name] || 0
-        return { ...author, bookCount }
-      })
+      return authors
+    },
+  },
+  Author: {
+    bookCount: ({ name }) => {
+      return books.reduce((acc, curr) => {
+        if (curr.author === name) return acc + 1
+        return acc
+      }, 0)
     },
   },
   Mutation: {
