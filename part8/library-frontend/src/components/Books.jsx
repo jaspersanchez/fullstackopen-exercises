@@ -17,7 +17,6 @@ const Books = () => {
       setBooks(books)
 
       if (!filter) {
-        console.log('happened')
         const genreSet = new Set()
         books.forEach((book) => {
           book.genres.forEach((genre) => genreSet.add(genre))

@@ -4,16 +4,16 @@ import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
-import { useApolloClient, useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import Recommend from './components/Recommend'
-import { ME } from './queries'
+import { ALL_BOOKS, BOOK_ADDED, ME } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
   const navigate = useNavigate()
 
-  const result = useQuery(ME)
+  const { data, loading, error, refetch } = useQuery(ME)
 
   useEffect(() => {
     const token = window.localStorage.getItem('library-user-token')
@@ -22,12 +22,28 @@ const App = () => {
     }
   }, [])
 
-  if (result.loading) return <div>loading...</div>
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded
+      alert(`Book ${addedBook.title} added.`)
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        }
+      })
+    },
+  })
+
+  if (loading) return <div>loading...</div>
+
+  if (token) refetch()
 
   const logout = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+    navigate('/')
   }
 
   return (
@@ -51,7 +67,9 @@ const App = () => {
         <Route path="/login" element={<LoginForm setToken={setToken} />} />
         <Route
           path="/recommended"
-          element={<Recommend favorite={result.data.me.favoriteGenre} />}
+          element={
+            <Recommend favorite={data.me ? data.me.favoriteGenre : null} />
+          }
         />
       </Routes>
     </div>

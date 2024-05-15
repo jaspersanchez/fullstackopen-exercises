@@ -9,15 +9,7 @@ const NewBook = ({ token }) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  const [createBook] = useMutation(CREATE_BOOK, {
-    update: (cache, response) => {
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
-          allBooks: allBooks.concat(response.data.addBook),
-        }
-      })
-    },
-  })
+  const [createBook] = useMutation(CREATE_BOOK)
   const navigate = useNavigate()
 
   if (!token) {

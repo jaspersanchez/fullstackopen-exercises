@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { LOGIN_USER } from '../queries'
+import { LOGIN_USER, ME } from '../queries'
 import { useNavigate } from 'react-router-dom'
 
 const LoginForm = ({ setToken }) => {
