@@ -1,15 +1,28 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOK } from '../queries'
+import { ALL_BOOKS, CREATE_BOOK } from '../queries'
+import { Navigate, useNavigate } from 'react-router-dom'
 
-const NewBook = () => {
+const NewBook = ({ token }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const [createBook] = useMutation(CREATE_BOOK, {
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(response.data.addBook),
+        }
+      })
+    },
+  })
+  const navigate = useNavigate()
 
-  const [createBook] = useMutation(CREATE_BOOK)
+  if (!token) {
+    return <Navigate to="/" replace={true} />
+  }
 
   const submit = async (event) => {
     event.preventDefault()
@@ -21,6 +34,8 @@ const NewBook = () => {
     setAuthor('')
     setGenres([])
     setGenre('')
+
+    navigate('/')
   }
 
   const addGenre = () => {

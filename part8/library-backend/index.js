@@ -177,6 +177,7 @@ const resolvers = {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
+      console.log(args)
       if (!args.author && !args.genre) {
         return Book.find({}).populate('author')
       }
@@ -189,6 +190,9 @@ const resolvers = {
     },
     allAuthors: async () => {
       return Author.find({})
+    },
+    me: (root, args, context) => {
+      return context.currentUser
     },
   },
   Author: {
@@ -298,6 +302,7 @@ const resolvers = {
       const userForToken = {
         username: user.username,
         id: user._id,
+        favoriteGenre: user.favoriteGenre,
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
