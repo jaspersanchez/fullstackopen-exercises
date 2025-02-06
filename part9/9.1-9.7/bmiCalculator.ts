@@ -3,7 +3,7 @@ interface bmiValues {
   weight: number;  
 }
 
-const calculateBmi = (heightCm: number, weightKg: number): string => {
+export const calculateBmi = (heightCm: number, weightKg: number): string => {
   const heightM = heightCm / 100
   const bmi = weightKg / heightM ** 2
 
@@ -28,16 +28,18 @@ const parseBmiArguments = (args: string[]): bmiValues => {
   }
 }
 
-try {
- const { height, weight } = parseBmiArguments(process.argv) 
- const bmi = calculateBmi(height, weight)
+if (require.main === module) {
+  try {
+   const { height, weight } = parseBmiArguments(process.argv) 
+   const bmi = calculateBmi(height, weight)
 
- console.log(bmi)
-} catch (error: unknown) {
- let errorMessage = 'Something went wrong: ' 
- 
- if (error instanceof Error) {
-   errorMessage += error.message
- }
- console.log(errorMessage)
-}
+   console.log(bmi)
+  } catch (error: unknown) {
+   let errorMessage = 'Something went wrong: ' 
+   
+   if (error instanceof Error) {
+     errorMessage += error.message
+   }
+   console.log(errorMessage)
+  }
+} 
