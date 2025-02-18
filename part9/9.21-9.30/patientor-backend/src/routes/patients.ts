@@ -1,11 +1,17 @@
 import express, { Request, Response } from 'express';
-import { NewPatient, NonSensitivePatient, Patient } from '../types';
+import {
+  Entry,
+  EntryWithoutId,
+  NewPatient,
+  NonSensitivePatient,
+  Patient,
+} from '../types';
 import patientService from '../services/patientService';
-import { errorMiddleware, newPatientParser } from '../utils';
+import { errorMiddleware, newEntryParser, newPatientParser } from '../utils';
 
 const router = express.Router();
 
-router.get('/', (_req, res: express.Response<NonSensitivePatient[]>) => {
+router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
   res.send(patientService.getNonSensitivePatients());
 });
 
@@ -18,9 +24,21 @@ router.post(
   }
 );
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req: Request<{ id: string }>, res: Response<Patient>) => {
   res.send(patientService.getPatient(req.params.id));
 });
+
+router.post(
+  '/:id/entries',
+  newEntryParser,
+  (
+    req: Request<{ id: string }, unknown, EntryWithoutId>,
+    res: Response<Entry>
+  ) => {
+    const addEntry = patientService.addPatientEntry(req.params.id, req.body);
+    res.json(addEntry);
+  }
+);
 
 router.use(errorMiddleware);
 
