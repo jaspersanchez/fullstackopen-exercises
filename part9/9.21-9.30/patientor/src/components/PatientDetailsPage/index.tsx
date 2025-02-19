@@ -10,11 +10,13 @@ import {
   Transgender,
   Work,
 } from '@mui/icons-material';
-import { Alert, Box, Typography } from '@mui/material';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import PatientEntryDetails from './PatientEntryDetails';
-import AddPatientEntryForm from './AddPatientEntryForm';
 import patientService from '../../services/patients';
 import axios from 'axios';
+import AddHospitalEntryForm from './AddHospitalEntryForm';
+import AddOccupationalHealthcareForm from './AddOccupationalHealthcareForm';
+import AddHealthCheckEntryForm from './AddHealthCheckEntryForm';
 
 interface Props {
   diagnoses: Diagnosis[];
@@ -23,6 +25,7 @@ interface Props {
 const PatientDetailsPage = ({ diagnoses }: Props) => {
   const [patient, setPatient] = useState<Patient>();
   const [error, setError] = useState<string>('');
+  const [activeForm, setActiveForm] = useState('');
   const { id } = useParams();
 
   useEffect(() => {
@@ -80,6 +83,10 @@ const PatientDetailsPage = ({ diagnoses }: Props) => {
     Hospital: <LocalHospital />,
   };
 
+  const toggleForm = (form: string) => {
+    setActiveForm(activeForm === form ? '' : form);
+  };
+
   if (patient) {
     return (
       <>
@@ -88,8 +95,58 @@ const PatientDetailsPage = ({ diagnoses }: Props) => {
         </Typography>
         <Typography>ssh: {patient.ssn}</Typography>
         <Typography>occupation: {patient.occupation}</Typography>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap={2}
+          my={2}
+        >
+          <Typography variant="h5">Add Entry Forms: </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => toggleForm('healthCheck')}
+          >
+            Health Check
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => toggleForm('occupationalHealthcare')}
+          >
+            Occupational Healthcare
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => toggleForm('hospital')}
+          >
+            Hospital
+          </Button>
+        </Box>
         {error && <Alert severity="error">{error}</Alert>}
-        <AddPatientEntryForm onSubmit={submitNewEntry} setError={setError} />
+        {activeForm === 'healthCheck' && (
+          <AddHealthCheckEntryForm
+            onSubmit={submitNewEntry}
+            setError={setError}
+            diagnoses={diagnoses}
+          />
+        )}
+        {activeForm === 'occupationalHealthcare' && (
+          <AddOccupationalHealthcareForm
+            diagnoses={diagnoses}
+            onSubmit={submitNewEntry}
+            setError={setError}
+          />
+        )}
+        {activeForm === 'hospital' && (
+          <AddHospitalEntryForm
+            onSubmit={submitNewEntry}
+            setError={setError}
+            diagnoses={diagnoses}
+          />
+        )}
         <Typography variant="h5" style={{ margin: '0.5em 0' }}>
           entries
         </Typography>
